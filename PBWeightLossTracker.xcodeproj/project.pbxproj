@@ -12,6 +12,8 @@
 		B924C65C25C8ED6B008ED6DC /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B924C65B25C8ED6B008ED6DC /* HistoryViewController.swift */; };
 		B924C65F25C8F1A6008ED6DC /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = B924C65E25C8F1A6008ED6DC /* Button.swift */; };
 		B924C66225C93913008ED6DC /* HomeScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B924C66125C93913008ED6DC /* HomeScreenVC.swift */; };
+		B97DAE0725CB78C90011B776 /* BoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97DAE0625CB78C90011B776 /* BoxView.swift */; };
+		B97DAE0A25CB81150011B776 /* LabelForProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97DAE0925CB81150011B776 /* LabelForProgress.swift */; };
 		B9B6491A25C79FD30081C473 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9B6491925C79FD30081C473 /* AppDelegate.swift */; };
 		B9B6491C25C79FD30081C473 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9B6491B25C79FD30081C473 /* SceneDelegate.swift */; };
 		B9B6491E25C79FD30081C473 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9B6491D25C79FD30081C473 /* ViewController.swift */; };
@@ -25,6 +27,8 @@
 		B924C65B25C8ED6B008ED6DC /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		B924C65E25C8F1A6008ED6DC /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		B924C66125C93913008ED6DC /* HomeScreenVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenVC.swift; sourceTree = "<group>"; };
+		B97DAE0625CB78C90011B776 /* BoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxView.swift; sourceTree = "<group>"; };
+		B97DAE0925CB81150011B776 /* LabelForProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelForProgress.swift; sourceTree = "<group>"; };
 		B9B6491625C79FD30081C473 /* PBWeightLossTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PBWeightLossTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9B6491925C79FD30081C473 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B9B6491B25C79FD30081C473 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -95,7 +99,9 @@
 				B924C65325C8EB90008ED6DC /* WeightObj.swift */,
 				B924C65B25C8ED6B008ED6DC /* HistoryViewController.swift */,
 				B924C66125C93913008ED6DC /* HomeScreenVC.swift */,
+				B97DAE0625CB78C90011B776 /* BoxView.swift */,
 				B924C65E25C8F1A6008ED6DC /* Button.swift */,
+				B97DAE0925CB81150011B776 /* LabelForProgress.swift */,
 			);
 			path = PBWeightLossTracker;
 			sourceTree = "<group>";
@@ -214,9 +220,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9B6491E25C79FD30081C473 /* ViewController.swift in Sources */,
+				B97DAE0A25CB81150011B776 /* LabelForProgress.swift in Sources */,
 				B924C65F25C8F1A6008ED6DC /* Button.swift in Sources */,
 				B924C65425C8EB90008ED6DC /* WeightObj.swift in Sources */,
 				B9B6491A25C79FD30081C473 /* AppDelegate.swift in Sources */,
+				B97DAE0725CB78C90011B776 /* BoxView.swift in Sources */,
 				B924C66225C93913008ED6DC /* HomeScreenVC.swift in Sources */,
 				B924C65C25C8ED6B008ED6DC /* HistoryViewController.swift in Sources */,
 				B9B6491C25C79FD30081C473 /* SceneDelegate.swift in Sources */,

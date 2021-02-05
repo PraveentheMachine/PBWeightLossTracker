@@ -2,7 +2,6 @@ PODS:
   - Charts (3.6.0):
     - Charts/Core (= 3.6.0)
   - Charts/Core (3.6.0)
-  - MKMagneticProgress (1.4)
   - Realm (10.1.4):
     - Realm/Headers (= 10.1.4)
   - Realm/Headers (10.1.4)
@@ -11,22 +10,19 @@ PODS:
 
 DEPENDENCIES:
   - Charts
-  - MKMagneticProgress
   - RealmSwift
 
 SPEC REPOS:
   trunk:
     - Charts
-    - MKMagneticProgress
     - Realm
     - RealmSwift
 
 SPEC CHECKSUMS:
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
-  MKMagneticProgress: 006b8c763d62986661bcde03794a3dcf56cd084a
   Realm: 80f4fb2971ccb9adc27a47d0955ae8e533a7030b
   RealmSwift: 0e566ca714edb377bba8ea0811eafcea0b93734e
 
-PODFILE CHECKSUM: bb0a2e71fed2846224e0c19e3cb7721ebe541a0d
+PODFILE CHECKSUM: a67052ece568316ac4f4ee1d27307bcd4ba7b922
 
 COCOAPODS: 1.10.0

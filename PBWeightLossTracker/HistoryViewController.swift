@@ -8,37 +8,65 @@
 import UIKit
 import RealmSwift
 class HistoryViewController: UITableViewController {
-    //UIColor(red: 0.09, green: 0.09, blue: 0.88, alpha: 1.00)
+    let realm = try! Realm()
+    var totalw : Results<WeightObject>?
+    var count = 0
+   
+
+
+    //When the view is being transitioned to we need to reload our favourites quotes as they are constantly being updated
     
-    var weights = ["Today","Today","Today","Today","Today","Today","Today"]
+    func loadWeights(){
+        print(totalw?.count)
+        while totalw?.count==nil {
+            print("YOLO")
+                self.totalw = self.realm.objects(WeightObject.self)
+        }
+        
+        tableView.reloadData()
+        
+    }
+       override func viewWillAppear(_ animated: Bool) {
+        print("VIEW WILL APPEAR")
+        loadWeights()
+       }
     override func viewDidLoad() {
+      
         super.viewDidLoad()
         
+        print("WE DONE")
+        loadWeights()
+
         navigationItem.title = "WeightLossHistory"
         tableView.register(MyCell.self, forCellReuseIdentifier: "cellID")
         //UIColor(red: 0.17, green: 0.17, blue: 0.29, alpha: 1.00)
         
 
-        tableView.backgroundColor = UIColor(red: 0.09, green: 0.09, blue: 0.18, alpha: 1.00)
+        tableView.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.98, alpha: 1.00)
 //        tableView.register(Header.self, forHeaderFooterViewReuseIdentifier: "headerID")
 //        tableView.sectionHeaderHeight = 50
         tableView.tableFooterView = UIView()
-
+        
         tableView.allowsSelection = false
+        
     
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return weights.count
+        return totalw?.count ?? 3
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let myCell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath) as! MyCell
-        myCell.nameLabel.text = weights[indexPath.row]
+    
+        myCell.nameLabel.text = totalw?[indexPath.row].Date
         myCell.myTableViewController = self
         myCell.layer.cornerRadius = 14
         myCell.layer.masksToBounds = true
-
+            myCell.weightLabel.text = String(totalw?[indexPath.row].weight ?? 0.0)
+        if(indexPath.row == 0){
+            myCell.changeLabel.text = "Starting Weight"
+        }
         return myCell
     }
     
@@ -50,13 +78,13 @@ class HistoryViewController: UITableViewController {
         return 80
     }
     
-    func deleteCell(cell: UITableViewCell){
-        if let deletionIndexPath  = tableView.indexPath(for: cell){
-            weights.remove(at: deletionIndexPath.row)
-            tableView.deleteRows(at:[deletionIndexPath] , with: .automatic)
-
-        }
-    }
+//    func deleteCell(cell: UITableViewCell){
+//        if let deletionIndexPath  = tableView.indexPath(for: cell){
+//            weights.remove(at: deletionIndexPath.row)
+//            tableView.deleteRows(at:[deletionIndexPath] , with: .automatic)
+//
+//        }
+//    }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
@@ -69,8 +97,6 @@ class HistoryViewController: UITableViewController {
 
 
 class MyCell: UITableViewCell {
-    
-    
     
     var myTableViewController: HistoryViewController?
     
@@ -110,14 +136,14 @@ class MyCell: UITableViewCell {
        let label = UILabel()
         label.text = "kg"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
+        label.textColor = .systemPink
         return label
     }()
     let weightLabel: UILabel = {
        let label = UILabel()
-        label.text = "65"
+      
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
+        label.textColor = .systemPink
         return label
     }()
     
@@ -147,11 +173,11 @@ class MyCell: UITableViewCell {
     func setupViews(){
        
         //border added to give illusion of spacing between cells
-        self.layer.borderColor  = UIColor(red: 0.09, green: 0.09, blue: 0.18, alpha: 1.00).cgColor
+        self.layer.borderColor  = UIColor(red: 0.96, green: 0.96, blue: 0.98, alpha: 1.00).cgColor
         self.layer.borderWidth = 5
 
         //label's background colour
-        self.backgroundColor = UIColor(red: 0.17, green: 0.17, blue: 0.29, alpha: 1.00)
+        self.backgroundColor = .white
         addSubview(nameLabel)
         addSubview(changeLabel)
         addSubview(weightMeasurementLabel)
@@ -192,6 +218,6 @@ class MyCell: UITableViewCell {
     }
     
     @objc func handleButton(){
-        myTableViewController?.deleteCell(cell: self)
+        print("")
     }
 }

@@ -9,6 +9,5 @@ target 'PBWeightLossTracker' do
 
    pod 'Charts'
    pod 'RealmSwift'
-   pod 'MKMagneticProgress'
 
 end
