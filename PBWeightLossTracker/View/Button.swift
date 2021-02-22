@@ -22,7 +22,7 @@ class Button: UIButton {
         layer.cornerRadius = 12
         layer.masksToBounds = true //allow us to clip the bounds to our radius to
         self.translatesAutoresizingMaskIntoConstraints = false //add our own autolayout constraints to the button
-        
+        self.titleLabel?.font = UIFont(name: Fonts.monsterratebold, size: 20)
 //        self.setTitle("Add a Weight", for: .normal)
 //        setTitleColor(.blue, for: .normal)
 //        self.addTarget(self, action: #selector(handleButton), for: .touchUpInside)

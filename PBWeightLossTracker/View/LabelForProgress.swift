@@ -13,6 +13,9 @@ class ProgressLabel: UILabel {
         self.weight = string
         super.init(frame: frame)
         text = string
+        text = "10"
+        self.font = UIFont(name: Fonts.monsterratebold, size: 20)
+
         
         
     }

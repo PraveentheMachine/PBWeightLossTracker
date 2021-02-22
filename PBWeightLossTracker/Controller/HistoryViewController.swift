@@ -9,20 +9,21 @@ import UIKit
 import RealmSwift
 class HistoryViewController: UITableViewController {
     let realm = try! Realm()
-    var totalw : Results<WeightObject>?
-    var count = 0
+    var weightsAdded : Results<WeightObject>?
    
 
 
     //When the view is being transitioned to we need to reload our favourites quotes as they are constantly being updated
     
     func loadWeights(){
-        print(totalw?.count)
-        while totalw?.count==nil {
-            print("YOLO")
-                self.totalw = self.realm.objects(WeightObject.self)
-        }
         
+        print(weightsAdded?.count)
+        while weightsAdded?.count==nil {
+            print("YOLO")
+                    
+                self.weightsAdded = self.realm.objects(WeightObject.self)
+        }
+        weightsAdded? = (weightsAdded?.sorted(byKeyPath:"aw ", ascending: true))!
         tableView.reloadData()
         
     }
@@ -53,17 +54,17 @@ class HistoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return totalw?.count ?? 3
+        return weightsAdded?.count ?? 3
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let myCell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath) as! MyCell
     
-        myCell.nameLabel.text = totalw?[indexPath.row].Date
+        myCell.nameLabel.text = weightsAdded?[indexPath.row].Date
         myCell.myTableViewController = self
         myCell.layer.cornerRadius = 14
         myCell.layer.masksToBounds = true
-            myCell.weightLabel.text = String(totalw?[indexPath.row].weight ?? 0.0)
+            myCell.weightLabel.text = String(weightsAdded?[indexPath.row].weight ?? 0.0)
         if(indexPath.row == 0){
             myCell.changeLabel.text = "Starting Weight"
         }

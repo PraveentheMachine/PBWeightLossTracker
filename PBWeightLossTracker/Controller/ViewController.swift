@@ -10,6 +10,8 @@ class tabViewController: UITabBarController {
         historyV2.title = "Weight Log"
         homeScreenVC.title = "Home"
         
+       
+        
         setViewControllers([homeScreenVC,historyV2], animated: true)
         
     }

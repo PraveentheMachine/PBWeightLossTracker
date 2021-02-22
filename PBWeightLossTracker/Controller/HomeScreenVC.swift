@@ -22,8 +22,10 @@ class HomeScreenVC: UIViewController {
     var dateString: String?
 
     let shapeLayer = CAShapeLayer()
-    let blueView = RectangleView(xPosition: 22, yPosition: 100, rectangleHeight: 250)
-    let chartViewRec = RectangleView(xPosition: 22, yPosition: 370, rectangleHeight: 300)
+    var progressViewRec: RectangleView?
+    //RectangleView(xPosition: 22, yPosition: 100, rectangleHeight: 250)
+    //RectangleView(xPosition: 22, yPosition: 370, rectangleHeight: 300)
+    var chartViewRec: RectangleView?
     let addWeightButton = UIButton()
     var weightTextField: UITextField?
     let screenSize: CGRect = UIScreen.main.bounds
@@ -100,39 +102,6 @@ class HomeScreenVC: UIViewController {
     }
     
     
-//
-//    func setData(){
-//        print("BEING CALLEDC")
-//        let set1 = LineChartDataSet(entries: yValues,data: months)
-//
-//        set1.mode = .cubicBezier
-//        set1.lineWidth = 3
-//        set1.drawCirclesEnabled = true
-//        set1.setColor(.gray)
-//        set1.fill = Fill(color: .orange)
-//        set1.fillAlpha = 0.8
-//        set1.drawFilledEnabled = false
-//        set1.drawHorizontalHighlightIndicatorEnabled = false
-//        let data = LineChartData(dataSet: set1)
-//        data.setDrawValues(false)
-//        lineChartView.data = data
-//    }
-
-    let yValues: [ChartDataEntry] = [
-    
-        ChartDataEntry(x: 0.0, y: 100.0),
-        ChartDataEntry(x: 1.0, y: 98.0),
-        ChartDataEntry(x: 2.0, y: 76.0),
-        ChartDataEntry(x: 3.0, y: 82.0),
-        ChartDataEntry(x: 4.0, y: 84.0),
-        ChartDataEntry(x: 5.0, y: 79.0),
-        ChartDataEntry(x: 6.0, y: 63.0)
-
-    ]
-
-
-    
-    
     private let button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemGreen
@@ -140,20 +109,16 @@ class HomeScreenVC: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 9
         button.layer.masksToBounds = true
+        button.titleLabel?.font = UIFont(name: Fonts.monsterratebold, size: 20.0)
         return button
         
-    }()
-    
-    private let progressView: UIProgressView = {
-        let progressView = UIProgressView(progressViewStyle: .bar)
-        progressView.trackTintColor = .gray
-        progressView.progressTintColor = .systemOrange
-        return progressView
     }()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        progressViewRec = RectangleView(xPosition: 22, yPosition: Int(screenSize.height*0.085), rectangleHeight: Int(screenSize.height*0.33))
+        chartViewRec = RectangleView(xPosition: 22, yPosition: Int(screenSize.height*0.45), rectangleHeight: Int(screenSize.height*0.33))
         setup()
 
         
@@ -161,24 +126,25 @@ class HomeScreenVC: UIViewController {
     
     let currentWeight: UILabel = {
        let label = UILabel()
+        label.font = UIFont(name: Fonts.monsterratebold, size: 48)
         label.text = "85.5kg"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .black
-        label.font = label.font.withSize(45)
+//        label.font = label.font.withSize(45)
         return label
     }()
     
 
     private func setupProgressCount(){
-        let center = CGPoint(x: (blueView.frame.minX+blueView.frame.maxX)/2, y: 280)
-        let circularPath = UIBezierPath(arcCenter: center, radius: 120, startAngle: .pi, endAngle: 2 * .pi, clockwise: true)
+        let center = CGPoint(x: (progressViewRec!.frame.minX+progressViewRec!.frame.maxX)/2, y: (progressViewRec?.frame.height)! * 0.95)
+        let circularPath = UIBezierPath(arcCenter: center, radius:(progressViewRec?.frame.width)!/2.6, startAngle: .pi, endAngle: 2 * .pi, clockwise: true)
         
         //create my track layer
         let trackLayer = CAShapeLayer()
         trackLayer.path = circularPath.cgPath
         
         trackLayer.strokeColor = UIColor(red: 0.86, green: 0.87, blue: 0.88, alpha: 1.00).cgColor
-        trackLayer.lineWidth = 20
+        trackLayer.lineWidth = 30
         trackLayer.fillColor = UIColor.clear.cgColor
         trackLayer.lineCap = .round
         view.layer.addSublayer(trackLayer)
@@ -186,7 +152,7 @@ class HomeScreenVC: UIViewController {
         gradient.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
         shapeLayer.path = circularPath.cgPath
         shapeLayer.strokeColor = UIColor.systemPink.cgColor
-        shapeLayer.lineWidth = 20
+        shapeLayer.lineWidth = 30
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineCap = .round
         view.layer.addSublayer(shapeLayer)
@@ -206,8 +172,8 @@ class HomeScreenVC: UIViewController {
         view.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.98, alpha: 1.00)
 //        view.addSubview(progressView)
 
-        view.addSubview(blueView)
-        view.addSubview(chartViewRec)
+        view.addSubview(progressViewRec!)
+        view.addSubview(chartViewRec!)
         view.addSubview(addWeightButton)
         
         
@@ -215,35 +181,37 @@ class HomeScreenVC: UIViewController {
 //        blueView.heightAnchor.constraint(equalToConstant: screenSize.height*0.93).isActive = true
 //        blueView.yPosition = 100
 //        blueView.backgroundColor = .black
-        chartViewRec.addSubview(lineChartView)
+        chartViewRec!.addSubview(lineChartView)
         setupProgressCount()
-                blueView.addSubview(currentWeight)
+        progressViewRec!.addSubview(currentWeight)
 
         currentWeight.translatesAutoresizingMaskIntoConstraints = false
-        currentWeight.centerYAnchor.constraint(equalTo: blueView.centerYAnchor).isActive =  true
-        currentWeight.centerXAnchor.constraint(equalTo: blueView.centerXAnchor).isActive = true
+        currentWeight.centerYAnchor.constraint(equalTo: progressViewRec!.centerYAnchor).isActive =  true
+        currentWeight.centerXAnchor.constraint(equalTo: progressViewRec!.centerXAnchor).isActive = true
         
         let beginningWeight = ProgressLabel(frame: UIView().frame, string: "64.0")
         view.addSubview(beginningWeight)
         beginningWeight.translatesAutoresizingMaskIntoConstraints = false
-        beginningWeight.centerYAnchor.constraint(equalTo: currentWeight.centerYAnchor, constant: 76).isActive = true
-        beginningWeight.leadingAnchor.constraint(equalTo: blueView.leadingAnchor, constant: 55).isActive = true
+        beginningWeight.topAnchor.constraint(equalTo: progressViewRec!.bottomAnchor, constant: screenSize.height * -0.077).isActive = true
+        beginningWeight.leadingAnchor.constraint(equalTo: progressViewRec!.leadingAnchor, constant: (screenSize.width*0.06)).isActive = true
         
         let goalWeight = ProgressLabel(frame: UIView().frame, string: "94.0")
         view.addSubview(goalWeight)
         
         goalWeight.translatesAutoresizingMaskIntoConstraints = false
-        goalWeight.centerYAnchor.constraint(equalTo: currentWeight.centerYAnchor, constant: 75.8).isActive = true
-        goalWeight.trailingAnchor.constraint(equalTo: blueView.trailingAnchor, constant: -55).isActive = true
+        goalWeight.topAnchor.constraint(equalTo: progressViewRec!.bottomAnchor, constant: screenSize.height * -0.077).isActive = true
+        goalWeight.trailingAnchor.constraint(equalTo: progressViewRec!.trailingAnchor, constant: (screenSize.width * -0.06)).isActive = true
         
         addWeightButton.translatesAutoresizingMaskIntoConstraints = false
-        addWeightButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        addWeightButton.widthAnchor.constraint(equalTo: chartViewRec.widthAnchor).isActive = true
+        addWeightButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        addWeightButton.widthAnchor.constraint(equalTo: chartViewRec!.widthAnchor).isActive = true
         addWeightButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        addWeightButton.topAnchor.constraint(equalTo: chartViewRec!.bottomAnchor, constant: screenSize.height*0.05).isActive = true
         addWeightButton.backgroundColor = .systemPink
         addWeightButton.layer.cornerRadius = 25
         addWeightButton.setTitle("Add Weight", for: .normal)
-        addWeightButton.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: 300).isActive = true
+        
+//        addWeightButton.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: 300).isActive = true
 //        currentWeight.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 20).isActive = true
 //        currentWeight.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
 
@@ -253,11 +221,11 @@ class HomeScreenVC: UIViewController {
 
 //
         lineChartView.translatesAutoresizingMaskIntoConstraints = false
-        lineChartView.topAnchor.constraint(equalTo: chartViewRec.topAnchor,constant: 25).isActive = true
-        lineChartView.widthAnchor.constraint(equalTo: chartViewRec.widthAnchor,constant: -10).isActive = true
-        lineChartView.leadingAnchor.constraint(equalTo: chartViewRec.leadingAnchor).isActive = true
-        lineChartView.trailingAnchor.constraint(equalTo: chartViewRec.trailingAnchor,constant: -10).isActive = true
-        lineChartView.heightAnchor.constraint(equalToConstant: 250).isActive = true
+        lineChartView.topAnchor.constraint(equalTo: chartViewRec!.topAnchor,constant: 25).isActive = true
+        lineChartView.widthAnchor.constraint(equalTo: chartViewRec!.widthAnchor,constant: -10).isActive = true
+        lineChartView.leadingAnchor.constraint(equalTo: chartViewRec!.leadingAnchor).isActive = true
+        lineChartView.trailingAnchor.constraint(equalTo: chartViewRec!.trailingAnchor,constant: -10).isActive = true
+        lineChartView.heightAnchor.constraint(equalTo: chartViewRec!.heightAnchor, constant: -10).isActive = true
         addWeightButton.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
 //
     }
