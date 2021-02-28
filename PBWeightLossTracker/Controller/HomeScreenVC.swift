@@ -11,36 +11,35 @@ import RealmSwift
 
 class HomeScreenVC: UIViewController {
     
-    let realm = try! Realm()
-    var totalw : Results<WeightObject>?
+    let realm = try! Realm() //Needed for initalisation of Realm
+    var weightObjects : Results<WeightObject>? //Collection used to store weighted objects gathered from Realm
     
 
-
-
-
-    var weightString: String?
-    var dateString: String?
-
-    let shapeLayer = CAShapeLayer()
-    var progressViewRec: RectangleView?
-    //RectangleView(xPosition: 22, yPosition: 100, rectangleHeight: 250)
-    //RectangleView(xPosition: 22, yPosition: 370, rectangleHeight: 300)
-    var chartViewRec: RectangleView?
-    let addWeightButton = UIButton()
+    let halfCircleForProgress = CAShapeLayer()
+    
+    var progressViewRec: RectangleView?  //The top view of the controller which houses the progress half circle and associated labels/fields
+    var chartViewRec: RectangleView? //Middle view which stores the chart representing the data
+    let addWeightButton = UIButton() //Bottom portion of view controller which handles the adding of new weight and subsequent
     var weightTextField: UITextField?
-    let screenSize: CGRect = UIScreen.main.bounds
+    
+    
+    let screenSize: CGRect = UIScreen.main.bounds //Used to calculate dimensions across multiple devices
 
 
 
     lazy var lineChartView: LineChartView = {
         let chartView = LineChartView()
+        
+        //charview speicif configurations
         chartView.backgroundColor = .white
         chartView.xAxis.drawGridLinesEnabled = false
-//        chartView.leftAxis.drawGridLinesEnabled = false
         chartView.pinchZoomEnabled = false
         chartView.doubleTapToZoomEnabled = false
         chartView.rightAxis.enabled = false
+        chartView.chartDescription?.enabled = false
+        chartView.animate(xAxisDuration: 0.5)
         
+        //Y-Axis configurations
         let yAxis = chartView.leftAxis
         
         yAxis.labelFont = .boldSystemFont(ofSize: 12)
@@ -49,19 +48,24 @@ class HomeScreenVC: UIViewController {
         yAxis.axisLineColor = .gray
         yAxis.labelPosition = .outsideChart
         
+        //X axis configurations
         let xAxis = chartView.xAxis
         xAxis.labelPosition = .bottom
         xAxis.labelFont = .boldSystemFont(ofSize: 12)
         xAxis.setLabelCount(6, force: false)
-//        xAxis.axisLineColor = .systemBlue
         xAxis.axisLineColor = .gray
         xAxis.labelTextColor = .gray
         xAxis.labelWidth = 0
-        chartView.chartDescription?.enabled = false
-        chartView.animate(xAxisDuration: 0.5)
+
         
         return chartView
     }()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        while(weightObjects?.count==nil){
+            self.weightObjects = realm.objects(WeightObject.self)
+        }
+    }
     
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         print("ENTRTY")
@@ -69,27 +73,46 @@ class HomeScreenVC: UIViewController {
     
     func setChart(){
         print("WE Start HERE")
-        DispatchQueue.main.async {
-            self.totalw = self.realm.objects(WeightObject.self)
-
+   
+        while(self.weightObjects?.count == nil){
+        self.weightObjects = self.realm.objects(WeightObject.self)
         }
-        print("WE GOT HERE")
+    
+        print(Realm.Configuration.defaultConfiguration.fileURL!)
 
-        let lat: String = totalw?[0].Date ?? "Unknwon"
-        let lat2: Double = totalw?[0].weight ?? 0.0
+        if(weightObjects?.count == 0 || weightObjects?.count == nil){
+            print("YOU SHALL NOT PASS")
+           
+        }
+        else{
+        print("WE GOT HERE2")
+        while(self.weightObjects?.count == nil){
+        self.weightObjects = self.realm.objects(WeightObject.self)
+        }
+        print("WE GOT HERE3 \(weightObjects?.count)")
+        
+        
+        let currentDate = weightObjects?[0].dateOfEntry
+        print(currentDate)
+        let string = getCurrentDate(date: (weightObjects?[0].dateOfEntry)!)
+        
+        let currentDateTest = string
+       
+        let currentWeightTest: Double = weightObjects?[0].weight ?? 0.0
 
-        let months = [lat,lat]
+        let months = [currentDateTest,currentDateTest]
         
 //        print(totalw?.count)
-        let unitsSold = [lat2,lat2]
-            print(Realm.Configuration.defaultConfiguration.fileURL!)
+        let unitsSold = [currentWeightTest,currentWeightTest]
         
             lineChartView.setBarChartData(xValues: months, yValues: unitsSold)
         
         }
+    }
     
-    private func getCurrentDate() -> String{
-        let currentDateTime = Date()
+    private func getCurrentDate(date: Date) -> String{
+        let currentDateTime = date
+        
         
         //Initilaising
         
@@ -150,21 +173,21 @@ class HomeScreenVC: UIViewController {
         view.layer.addSublayer(trackLayer)
         let gradient = CAGradientLayer()
         gradient.colors = [UIColor.white.cgColor, UIColor.black.cgColor]
-        shapeLayer.path = circularPath.cgPath
-        shapeLayer.strokeColor = UIColor.systemPink.cgColor
-        shapeLayer.lineWidth = 30
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.lineCap = .round
-        view.layer.addSublayer(shapeLayer)
+        halfCircleForProgress.path = circularPath.cgPath
+        halfCircleForProgress.strokeColor = UIColor.systemPink.cgColor
+        halfCircleForProgress.lineWidth = 30
+        halfCircleForProgress.fillColor = UIColor.clear.cgColor
+        halfCircleForProgress.lineCap = .round
+        view.layer.addSublayer(halfCircleForProgress)
 //        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
-        shapeLayer.strokeEnd = 0
+        halfCircleForProgress.strokeEnd = 0
         
         let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
         basicAnimation.toValue = 74.00/95.00
         basicAnimation.duration = 2
         basicAnimation.fillMode = .forwards
         basicAnimation.isRemovedOnCompletion = false
-        shapeLayer.add(basicAnimation, forKey: "ur")
+        halfCircleForProgress.add(basicAnimation, forKey: "ur")
         
     }
     private func setup(){
@@ -192,15 +215,15 @@ class HomeScreenVC: UIViewController {
         let beginningWeight = ProgressLabel(frame: UIView().frame, string: "64.0")
         view.addSubview(beginningWeight)
         beginningWeight.translatesAutoresizingMaskIntoConstraints = false
-        beginningWeight.topAnchor.constraint(equalTo: progressViewRec!.bottomAnchor, constant: screenSize.height * -0.077).isActive = true
-        beginningWeight.leadingAnchor.constraint(equalTo: progressViewRec!.leadingAnchor, constant: (screenSize.width*0.06)).isActive = true
+        beginningWeight.topAnchor.constraint(equalTo: progressViewRec!.bottomAnchor, constant: screenSize.height * -0.082).isActive = true
+        beginningWeight.leadingAnchor.constraint(equalTo: progressViewRec!.leadingAnchor, constant: (screenSize.width*0.0760)).isActive = true
         
         let goalWeight = ProgressLabel(frame: UIView().frame, string: "94.0")
         view.addSubview(goalWeight)
         
         goalWeight.translatesAutoresizingMaskIntoConstraints = false
-        goalWeight.topAnchor.constraint(equalTo: progressViewRec!.bottomAnchor, constant: screenSize.height * -0.077).isActive = true
-        goalWeight.trailingAnchor.constraint(equalTo: progressViewRec!.trailingAnchor, constant: (screenSize.width * -0.06)).isActive = true
+        goalWeight.topAnchor.constraint(equalTo: progressViewRec!.bottomAnchor, constant: screenSize.height * -0.082).isActive = true
+        goalWeight.trailingAnchor.constraint(equalTo: progressViewRec!.trailingAnchor, constant: (screenSize.width * -0.0740)).isActive = true
         
         addWeightButton.translatesAutoresizingMaskIntoConstraints = false
         addWeightButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -211,15 +234,11 @@ class HomeScreenVC: UIViewController {
         addWeightButton.layer.cornerRadius = 25
         addWeightButton.setTitle("Add Weight", for: .normal)
         
-//        addWeightButton.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: 300).isActive = true
-//        currentWeight.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 20).isActive = true
-//        currentWeight.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
 
-        
+
         setChart()
 
 
-//
         lineChartView.translatesAutoresizingMaskIntoConstraints = false
         lineChartView.topAnchor.constraint(equalTo: chartViewRec!.topAnchor,constant: 25).isActive = true
         lineChartView.widthAnchor.constraint(equalTo: chartViewRec!.widthAnchor,constant: -10).isActive = true
@@ -235,8 +254,7 @@ class HomeScreenVC: UIViewController {
         alertController.addTextField(configurationHandler: weightTextFieldHandler)
         
         let submitAction = UIAlertAction(title: "Submit Weight", style: .default, handler: {_ in
-//            print(self.weightTextField?.text ?? "NO WEIGHT")
-            alertController.dismiss(animated: true, completion: nil)
+        alertController.dismiss(animated: true, completion: nil)
 
             //Need to handle invalid inputs
             
@@ -245,7 +263,7 @@ class HomeScreenVC: UIViewController {
                     let newWeightObj = WeightObject()
                     let weight = Double((self.weightTextField?.text)!)
                     newWeightObj.weight = weight!
-                    newWeightObj.Date = self.getCurrentDate()
+                    newWeightObj.dateOfEntry = Date()
                     self.realm.add(newWeightObj)
                     }
                 }
@@ -255,28 +273,13 @@ class HomeScreenVC: UIViewController {
                 
             })
             
-          
-        
-        
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         
         alertController.addAction(submitAction)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true)
-
-        
-//        do{
-//        try realm.write({
-//
-//        })
-//
-//        }
-//        catch{
-//
-//        }
-//        print("BUTTON TAPPED")
     }
-    //}
+
     
     //push to another view controller
     func okHandler(alert: UIAlertAction){
@@ -287,18 +290,23 @@ class HomeScreenVC: UIViewController {
         weightTextField = textField
         weightTextField?.placeholder = "JJJJJJJ"
     }
+    
+    
+    public func convertDateToString() -> String{
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM"
+       return dateFormatter.string(from: date)
+       
+    }
 }
 
 
 
 
-//    func setCorner(withRadius:Int, borderWidth:Int = 0, color: UIColor = .clear){
-//        self.layer.cornerRadius = radius
-//        self.layer.borderColor = color
-//        self.layer.borderWidth = borderWidth
-//        self.clipsToBounds = true
-//    }
-//}
+
+//Mark
+
 
 extension LineChartView {
 

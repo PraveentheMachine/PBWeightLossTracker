@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+
+struct Fonts{
+    
+    static let monsterratebold = "Montserrat-Bold"
+}

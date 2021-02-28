@@ -12,18 +12,15 @@ class HistoryViewController: UITableViewController {
     var weightsAdded : Results<WeightObject>?
    
 
-
-    //When the view is being transitioned to we need to reload our favourites quotes as they are constantly being updated
+   
     
     func loadWeights(){
-        
-        print(weightsAdded?.count)
         while weightsAdded?.count==nil {
             print("YOLO")
                     
                 self.weightsAdded = self.realm.objects(WeightObject.self)
         }
-        weightsAdded? = (weightsAdded?.sorted(byKeyPath:"aw ", ascending: true))!
+        weightsAdded = realm.objects(WeightObject.self).sorted(byKeyPath: "dateOfEntry", ascending: false)
         tableView.reloadData()
         
     }
@@ -57,10 +54,25 @@ class HistoryViewController: UITableViewController {
         return weightsAdded?.count ?? 3
     }
     
+    private func getCurrentDate(date: Date) -> String{
+        let currentDateTime = date
+        
+        
+        //Initilaising
+        
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        
+        let dateString = formatter.string(from: currentDateTime)
+        print(dateString)
+        return dateString
+    }
+    
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let myCell = tableView.dequeueReusableCell(withIdentifier: "cellID", for: indexPath) as! MyCell
-    
-        myCell.nameLabel.text = weightsAdded?[indexPath.row].Date
+        let stringT = getCurrentDate(date: (weightsAdded?[indexPath.row].dateOfEntry)!)
+        myCell.nameLabel.text = stringT
         myCell.myTableViewController = self
         myCell.layer.cornerRadius = 14
         myCell.layer.masksToBounds = true
@@ -176,6 +188,7 @@ class MyCell: UITableViewCell {
         //border added to give illusion of spacing between cells
         self.layer.borderColor  = UIColor(red: 0.96, green: 0.96, blue: 0.98, alpha: 1.00).cgColor
         self.layer.borderWidth = 5
+        
 
         //label's background colour
         self.backgroundColor = .white
@@ -207,16 +220,10 @@ class MyCell: UITableViewCell {
         weightLabel.bottomAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 60).isActive = true
         weightLabel.font = weightLabel.font.withSize(45)
 
-        
-        
-//        changeLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor).isActive = true
-
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0":nameLabel] ))
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0":nameLabel] ))
-//        addSubview(actionButton)
-//        actionButton.translatesAutoresizingMaskIntoConstraints = false
-//        actionButton.leftAnchor.constraint(equalTo: nameLabel.leftAnchor,constant: 100).isActive = true
+    
     }
+    
+   
     
     @objc func handleButton(){
         print("")

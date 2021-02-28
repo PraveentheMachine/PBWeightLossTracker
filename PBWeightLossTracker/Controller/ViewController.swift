@@ -15,6 +15,32 @@ class tabViewController: UITabBarController {
         setViewControllers([homeScreenVC,historyV2], animated: true)
         
     }
+//    
+//    override func viewDidLayoutSubviews() {
+//        if(Core.shared.isNewUser()){
+//            //do onboaridng
+//            print("Being done")
+//            let vc = WelcomeViewController();
+//            vc.modalPresentationStyle = .fullScreen
+//            vc.view.backgroundColor = .white
+//            present(vc, animated: true)
+//        }
+//    }
+}
+
+
+
+class Core{
+    static let shared = Core()
+    
+    func isNewUser() -> Bool{
+        
+        return !UserDefaults.standard.bool(forKey: "isNewUser")
+    }
+    
+    func setIsNotNewUser(){
+        UserDefaults.standard.set(true,forKey: "isNewUser")
+    }
 }
 
 //
